@@ -14,24 +14,45 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-         adf()
-        Log.d(TAG, "later")
+         //adf()
+        Log.d(TAG, "Before runBlocking ")
+        runBlocking {
+            launch (Dispatchers.IO){
+                delay(3000)
+                Log.d(TAG, "Finish IO")
+
+            }
+            launch (Dispatchers.IO){
+                delay(6000)
+                Log.d(TAG, "Finish IO")
+
+            }
+
+
+            Log.d(TAG, "Start runBlocking ")
+            delay(5000L)
+            Log.d(TAG, "End runBlocking ")
+
+        }
+        Log.d(TAG, "After runBlocking ")
 
 
 
     }
     fun adf(){
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(newSingleThreadContext("fff")) {
             delay(4000L)
-            Log.d(TAG,"LAla")
+
 
             withContext(Dispatchers.Main){
                 binding.TXT.text="ferg"
+                Log.d(TAG, "AAAAAAAAAA")
+
             }
         }
 
 
-      
+
 
     }
 }
