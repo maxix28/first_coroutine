@@ -1,8 +1,10 @@
 package com.example.coroutnies2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.example.coroutnies2.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
@@ -19,23 +21,24 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "Before runBlocking ")
 
-      GlobalScope.launch (Dispatchers.IO){
-            val time = measureTimeMillis {
-                val b=  async { adf() }
-                val a =  async {adf() }
-                Log.d(TAG, "${b.await()}")
-                Log.d(TAG, "${a.await()}")
-        }
-            Log.d(TAG, "Time $time")
 
-            delay(5000L)
-            Log.d(TAG, "End runBlocking ")
+
+binding.TXT.setOnClickListener {
+    lifecycleScope.launch {
+        while(true){
+            delay(1000)
+            Log.d(TAG, "Still working ")
 
         }
-        Log.d(TAG, "After runBlocking ")
-
-
-
+    }
+    lifecycleScope.launch {
+        delay(5000)
+        Intent(this@MainActivity,SecondActivity::class.java).also{
+            startActivity(it)
+            finish()
+        }
+    }
+}
     }
   suspend  fun adf():String{
 
