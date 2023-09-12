@@ -15,21 +15,32 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
          //adf()
+        val job= GlobalScope.launch (Dispatchers.Default){
+repeat(7) {
+    if(isActive) {
+        delay(3000)
+
+        Log.d(TAG, "Job in runBlocking ")
+    }
+}
+        }
         Log.d(TAG, "Before runBlocking ")
         runBlocking {
             launch (Dispatchers.IO){
                 delay(3000)
-                Log.d(TAG, "Finish IO")
+                Log.d(TAG, "Finish IO  1")
 
             }
             launch (Dispatchers.IO){
                 delay(6000)
-                Log.d(TAG, "Finish IO")
+                Log.d(TAG, "Finish IO 2 ")
 
             }
-
+            job.join()
+            delay(3000L)
 
             Log.d(TAG, "Start runBlocking ")
+            job.cancel()
             delay(5000L)
             Log.d(TAG, "End runBlocking ")
 
