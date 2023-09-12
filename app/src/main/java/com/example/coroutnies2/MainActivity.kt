@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.coroutnies2.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     val TAG= "MainActivity"
@@ -15,32 +16,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
          //adf()
-        val job= GlobalScope.launch (Dispatchers.Default){
-repeat(7) {
-    if(isActive) {
-        delay(3000)
 
-        Log.d(TAG, "Job in runBlocking ")
-    }
-}
-        }
         Log.d(TAG, "Before runBlocking ")
-        runBlocking {
-            launch (Dispatchers.IO){
-                delay(3000)
-                Log.d(TAG, "Finish IO  1")
 
-            }
-            launch (Dispatchers.IO){
-                delay(6000)
-                Log.d(TAG, "Finish IO 2 ")
+      GlobalScope.launch (Dispatchers.IO){
+            val time = measureTimeMillis {
+                val b=  async { adf() }
+                val a =  async {adf() }
+                Log.d(TAG, "${b.await()}")
+                Log.d(TAG, "${a.await()}")
+        }
+            Log.d(TAG, "Time $time")
 
-            }
-            job.join()
-            delay(3000L)
-
-            Log.d(TAG, "Start runBlocking ")
-            job.cancel()
             delay(5000L)
             Log.d(TAG, "End runBlocking ")
 
@@ -50,20 +37,11 @@ repeat(7) {
 
 
     }
-    fun adf(){
-        GlobalScope.launch(newSingleThreadContext("fff")) {
-            delay(4000L)
+  suspend  fun adf():String{
+
+      delay(4000L)
 
 
-            withContext(Dispatchers.Main){
-                binding.TXT.text="ferg"
-                Log.d(TAG, "AAAAAAAAAA")
-
-            }
-        }
-
-
-
-
+        return "gg"
     }
 }
